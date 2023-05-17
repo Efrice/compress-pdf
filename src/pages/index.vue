@@ -23,9 +23,9 @@ function load(e: Event) {
 }
 
 function download(){
-  if(url.value === '') return 
+  if(url.value === '' || filename.value === 'No file Chosen') return 
   compressing.value = true
-  loadPdf(url.value, +range.value, compressing)
+  loadPdf(url.value, +range.value, filename.value, compressing)
 }
 </script>
 

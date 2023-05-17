@@ -7,7 +7,7 @@ pdf.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 const imgData: imgData[] = []
 
-export async function loadPdf(url: string, range: number, compressing: Ref<boolean>) {
+export async function loadPdf(url: string, range: number, name: string, compressing: Ref<boolean>) {
   const loadingTask = pdf.getDocument({
     url,
     disableRange: true
@@ -36,7 +36,7 @@ export async function loadPdf(url: string, range: number, compressing: Ref<boole
         renderTask.promise.then(function () {
           imgData.push({src: canvas.toDataURL("image/jpeg", +range), width: canvas.width, height: canvas.height})
           if(imgData.length === totalPages){
-            img2Pdf(compressing)
+            img2Pdf(name, compressing)
           }
         })
       })
@@ -44,7 +44,7 @@ export async function loadPdf(url: string, range: number, compressing: Ref<boole
   })
 }
 
-function img2Pdf(compressing: Ref<boolean>) {
+function img2Pdf(name: string, compressing: Ref<boolean>) {
   const options = {
     autoFirstPage: false,
     compress: false
@@ -66,7 +66,7 @@ function img2Pdf(compressing: Ref<boolean>) {
 
   stream.on("finish", function () {
     var output_blob = stream.toBlob("application/pdf");
-    saveAs(output_blob, 'download.pdf');
+    saveAs(output_blob, name);
     compressing.value = false
   });
 }
